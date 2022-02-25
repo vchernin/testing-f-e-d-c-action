@@ -10,6 +10,22 @@ inputs:
   github_org_wide:
     description: "Enter an exact GitHub organization name to enable this action for GitHub organization wide mode. This is not needed if only updating a single repo."
     required: false
+  name_input: 
+    description: "Name of user to do commits"
+    required: true
+    default: Flatpak External Data Checker
+  email_input:
+    description: "Email of user to do commits"
+    required: true
+    default: ${{ github.actor }}
+  github_token_input:
+    description: "Token needed to edit repo"
+    required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
+  github_workspace_input:
+    description: "Current repo we are in"
+    required: true
+    default: ${{ github.workspace }}
 
 runs:
   using: "docker"
@@ -20,13 +36,13 @@ runs:
     - ${{ inputs.github_org_wide }}
   env: 
     # todo do we need both author and commiter names here? script isn't using them
-    GIT_AUTHOR_NAME: Flatpak External Data Checker
-    GIT_COMMITTER_NAME: Flatpak External Data Checker
-    GIT_AUTHOR_EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
-    GIT_COMMITTER_EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
-    EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
-    GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+    GIT_AUTHOR_NAME: ${{ inputs.name_input }}
+    GIT_COMMITTER_NAME: ${{ inputs.name_input }}
+    GIT_AUTHOR_EMAIL: ${{ inputs.email_input }}@users.noreply.github.com
+    GIT_COMMITTER_EMAIL: ${{ inputs.email_input }}@users.noreply.github.com
+    EMAIL: ${{ inputs.email_input }}@users.noreply.github.com
+    GITHUB_TOKEN: ${{ inputs.github_token_input }}
     # CONFIG_FILE: ${{ inputs.config_file }}
     # GITHUB_ORG_WIDE: ${{ inputs.github_org_wide }}
-    GITHUB_WORKSPACE: '${{ github.workspace }}' # todo verify
+    GITHUB_WORKSPACE: ${{ inputs.github_workspace_input }} # todo verify
   entrypoint: "entrypoint.sh"
