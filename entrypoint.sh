@@ -107,6 +107,6 @@ for repo in ${checker_apps[@]}; do
     read_config
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        /app/flatpak-external-data-checker --verbose "$require_important_update" --update --never-fork "$manifest"
+        /app/flatpak-external-data-checker --verbose --require-important-update --update --never-fork "$manifest"
     fi
 done
