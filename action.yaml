@@ -10,6 +10,9 @@ inputs:
   github_org_wide:
     description: "Enter an exact GitHub organization name to enable this action for GitHub organization wide mode. This is not needed if only updating a single repo."
     required: false
+  path_to_manifest:
+    description: "Enter the exact path to the Flatpak manifest in your GitHub repo. Only needed for individual repositories."
+    required: false
   name_input: 
     description: "Name of user to do commits"
     required: true
@@ -34,6 +37,7 @@ runs:
   args:
     - ${{ inputs.config_file }}
     - ${{ inputs.github_org_wide }}
+    - ${{ inputs.path_to_manifest }}
   env: 
     # todo do we need both author and commiter names here? script isn't using them
     GIT_AUTHOR_NAME: ${{ inputs.name_input }}

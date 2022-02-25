@@ -17,6 +17,13 @@ else
     github_org_wide=$2
 fi
 
+if [[ -z "$3" ]]; then
+    echo "Was not passed a exact path to the Flatpak manifest. Exiting."
+    exit 1
+else
+    path_to_manifest=$3
+fi
+
 detect_manifest() {
     repo=${1}
     
@@ -28,25 +35,26 @@ detect_manifest() {
     
     # todo maybe just make the path a required input option...
     
-    if [[ -f com.github.wwmm.easyeffects.yml ]]; then
-        manifest=com.github.wwmm.easyeffects.yml
-    elif [[ -f com.github.wwmm.easyeffects.yaml ]]; then
-        manifest=com.github.wwmm.easyeffects.yaml
-    elif [[ -f com.github.wwmm.easyeffects.json ]]; then
-        manifest=com.github.wwmm.easyeffects.json
-    else
-        return 1
-    fi
+    # if [[ -f com.github.wwmm.easyeffects.yml ]]; then
+    #     manifest=com.github.wwmm.easyeffects.yml
+    # elif [[ -f com.github.wwmm.easyeffects.yaml ]]; then
+    #     manifest=com.github.wwmm.easyeffects.yaml
+    # elif [[ -f com.github.wwmm.easyeffects.json ]]; then
+    #     manifest=com.github.wwmm.easyeffects.json
+    # else
+    #     return 1
+    # fi
 
-    echo $manifest
+    echo $path_to_manifest
     
     # check if repo opted out
     # todo is this valid arg check?
     
     if [ -z ${config_file+x} ]; then 
-        echo "config option is not defined"; 
+        do=nothing
     else 
-        echo "config file should exist, attempting to read it"; 
+        do=nothing
+        # echo "config file should exist, attempting to read it"; 
         if [[ -f $config_file ]]; then
             if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
                 return 1
@@ -62,7 +70,8 @@ detect_manifest() {
                 automerge_fedc_prs="--automerge-fedc-prs"
             fi
         else
-            echo "config file variable was set, but config file was not found"
+            #echo "config file variable was set, but config file was not found"
+            do=nothing
         fi
     fi
 }
