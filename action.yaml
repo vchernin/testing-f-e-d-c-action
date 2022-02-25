@@ -45,4 +45,3 @@ runs:
     # CONFIG_FILE: ${{ inputs.config_file }}
     # GITHUB_ORG_WIDE: ${{ inputs.github_org_wide }}
     GITHUB_WORKSPACE: ${{ inputs.github_workspace_input }} # todo verify
-  entrypoint: "entrypoint.sh"
