@@ -25,9 +25,6 @@ ls
 detect_manifest() {
     repo=${1}
     
-    echo "current repo: "
-    echo "$repo"
-    
     # check if repo opted out
     # todo is this valid arg check?
     
@@ -35,18 +32,18 @@ detect_manifest() {
         echo "config option is not defined"; 
     else 
         echo "config file should exist, attempting to read it"; 
-        if [[ -f $repo/$config_file ]]; then
-            if ! jq -e '."disable-external-data-checker" | not' < "$repo"/"$config_file" > /dev/null; then
+        if [[ -f $config_file ]]; then
+            if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
                 return 1
             fi
-            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$repo"/"$config_file" > /dev/null; then
+            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$config_file" > /dev/null; then
                 return 1
             fi
-            if ! jq -e '."require-important-update" | not' < "$repo"/"$config_file" > /dev/null; then
+            if ! jq -e '."require-important-update" | not' < "$config_file" > /dev/null; then
                 require_important_update="--require-important-update"
             fi
             # todo this probably won't actually work yet, but is here for later
-            if ! jq -e '."automerge-fedc-prs" | not' < "$repo"/"$config_file" > /dev/null; then
+            if ! jq -e '."automerge-fedc-prs" | not' < "$config_file" > /dev/null; then
                 automerge_fedc_prs="--automerge-fedc-prs"
             fi
         else
@@ -56,12 +53,18 @@ detect_manifest() {
     
     # Todo whether run GitHub-org wide or for an individual repo, this should search for manifests recursively.
     # There is no guarantee it is in the root directory.
-    if [[ -f $repo/${repo}.yml ]]; then
-        manifest=${repo}.yml
-    elif [[ -f $repo/${repo}.yaml ]]; then
-        manifest=${repo}.yaml
-    elif [[ -f $repo/${repo}.json ]]; then
-        manifest=${repo}.json
+    
+    # todo for some reason the dir above is always not the expected name, so hardcoding
+    # the above suggestion should still fix this properly though
+    
+    # todo maybe just make the path a required input option...
+    
+    if [[ -f com.github.wwmm.easyeffects.yml ]]; then
+        manifest=com.github.wwmm.easyeffects.yml
+    elif [[ -f com.github.wwmm.easyeffects.yaml ]]; then
+        manifest=com.github.wwmm.easyeffects.yaml
+    elif [[ -f com.github.wwmm.easyeffects.json ]]; then
+        manifest=com.github.wwmm.easyeffects.json
     else
         return 1
     fi
@@ -75,8 +78,6 @@ git config --global user.email "$GIT_AUTHOR_EMAIL"
 if [ -z ${github_org_wide+x} ]; then 
     echo "GitHub organization mode variable is unset, assuming only need to edit individual current repo"; 
     checker_apps[0]=$(pwd)
-    echo "setting workspace to"
-    pwd
 else 
     echo "GitHub organization mode is being set, attempting to run for a GitHub organization" 
         
@@ -95,6 +96,6 @@ for repo in ${checker_apps[@]}; do
     echo "$manifest"
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        /app/flatpak-external-data-checker --verbose "$require_important_update" "$automerge_fedc_prs" --update --never-fork "$repo"/"$manifest"
+        /app/flatpak-external-data-checker --verbose "$require_important_update" "$automerge_fedc_prs" --update --never-fork "$manifest"
     fi
 done
