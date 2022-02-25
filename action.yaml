@@ -29,7 +29,7 @@ inputs:
 
 runs:
   using: "docker"
-  image: "docker://ghcr.io/vchernin/flatpak-external-data-checker:latest"
+  image: "Dockerfile"
   # todo docs seem to specify this, but maybe env can be used instead
   args:
     - ${{ inputs.config_file }}
