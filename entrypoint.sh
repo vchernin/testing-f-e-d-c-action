@@ -20,6 +20,8 @@ fi
 echo "github workspace override: "
 echo "$GITHUB_WORKSPACE_OVERRIDE"
 
+ls
+
 detect_manifest() {
     repo=${1}
     
