@@ -31,17 +31,17 @@ detect_manifest() {
     else 
         echo "config file should exist, attempting to read it"; 
         if [[ -f $repo/$config_file ]]; then
-            if ! jq -e '."disable-external-data-checker" | not' < "$repo"/"$config_file".json > /dev/null; then
+            if ! jq -e '."disable-external-data-checker" | not' < "$repo"/"$config_file" > /dev/null; then
                 return 1
             fi
-            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$repo"/"$config_file".json > /dev/null; then
+            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$repo"/"$config_file" > /dev/null; then
                 return 1
             fi
-            if ! jq -e '."require-important-update" | not' < "$repo"/"$config_file".json > /dev/null; then
+            if ! jq -e '."require-important-update" | not' < "$repo"/"$config_file" > /dev/null; then
                 require_important_update="--require-important-update"
             fi
             # todo this probably won't actually work yet, but is here for later
-            if ! jq -e '."automerge-fedc-prs" | not' < "$repo"/"$config_file".json > /dev/null; then
+            if ! jq -e '."automerge-fedc-prs" | not' < "$repo"/"$config_file" > /dev/null; then
                 automerge_fedc_prs="--automerge-fedc-prs"
             fi
         else
