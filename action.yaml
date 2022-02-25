@@ -1,4 +1,4 @@
-name: "Flatpak External Data Checker"
+name: "Testing Flatpak External Data Checker"
 author: "The Flatpak External Data Checker authors"
 description: "A tool for checking if the external data used in Flatpak manifests is still up to date" 
 inputs:
