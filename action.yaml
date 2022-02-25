@@ -6,12 +6,10 @@ inputs:
   config_file:
     description: "Set the name for a JSON config file that can store configuration options passed to the action. Note the file name is always appended with .json"
     required: false
-    default: ""
+    default: "flathub.json"
   github_org_wide:
     description: "Enter an exact GitHub organization name to enable this action for GitHub organization wide mode. This is not needed if only updating a single repo."
     required: false
-    default: ""
-    
 
 runs:
   using: "docker"
@@ -24,11 +22,11 @@ runs:
     # todo do we need both author and commiter names here? script isn't using them
     GIT_AUTHOR_NAME: Flatpak External Data Checker
     GIT_COMMITTER_NAME: Flatpak External Data Checker
-    GIT_AUTHOR_EMAIL: ${{ github.actor }}@users.noreply.github.com
-    GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
-    EMAIL: ${{ github.actor }}@users.noreply.github.com
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GIT_AUTHOR_EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
+    GIT_COMMITTER_EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
+    EMAIL: "'${{ github.actor }}'@users.noreply.github.com"
+    GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
     # CONFIG_FILE: ${{ inputs.config_file }}
     # GITHUB_ORG_WIDE: ${{ inputs.github_org_wide }}
-    GITHUB_WORKSPACE: $ {{ GITHUB_WORKSPACE }} # todo verify
+    GITHUB_WORKSPACE: '${{ github.workspace }}' # todo verify
   entrypoint: "entrypoint.sh"
