@@ -34,6 +34,7 @@ detect_manifest() {
     # the above suggestion should still fix this properly though
     
     # todo maybe just make the path a required input option...
+    # but need to be clever for org-wide mode
     
     # if [[ -f com.github.wwmm.easyeffects.yml ]]; then
     #     manifest=com.github.wwmm.easyeffects.yml
@@ -50,11 +51,17 @@ detect_manifest() {
     # check if repo opted out
     # todo is this valid arg check?
     
+    
+}
+
+read_config() {
+    
+    require_important_update=""
+    automerge_flathubbot_prs=""
     if [ -z ${config_file+x} ]; then 
-        do=nothing
+        echo "config file variable was not set, no config options will be read from a file"
     else 
-        do=nothing
-        # echo "config file should exist, attempting to read it"; 
+        echo "config file should exist, attempting to read it"; 
         if [[ -f $config_file ]]; then
             if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
                 return 1
@@ -66,15 +73,16 @@ detect_manifest() {
                 require_important_update="--require-important-update"
             fi
             # todo this probably won't actually work yet, but is here for later
-            if ! jq -e '."automerge-fedc-prs" | not' < "$config_file" > /dev/null; then
-                automerge_fedc_prs="--automerge-fedc-prs"
+            if ! jq -e '."automerge-flathubbot-prs" | not' < "$config_file" > /dev/null; then
+                automerge_flathubbot_prs="--automerge-flathubbot-prs"
             fi
         else
-            #echo "config file variable was set, but config file was not found"
-            do=nothing
+            echo "config file variable was set, but config file was not found"
         fi
     fi
+    
 }
+
 
 git config --global user.name "$GIT_AUTHOR_NAME" && \
 git config --global user.email "$GIT_AUTHOR_EMAIL"
@@ -96,10 +104,9 @@ fi
 
 for repo in ${checker_apps[@]}; do
     manifest=$(detect_manifest "$repo")
-    echo "manifest found is: " 
-    echo "$manifest"
+    read_config
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        /app/flatpak-external-data-checker --verbose --update --never-fork "$manifest"
+        /app/flatpak-external-data-checker --verbose "$require_important_update" "$automerge_flathubbot_prs" --update --never-fork "$manifest"
     fi
 done
