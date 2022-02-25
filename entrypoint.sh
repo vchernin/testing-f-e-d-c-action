@@ -69,9 +69,9 @@ git config --global user.email "$GIT_AUTHOR_EMAIL"
 
 if [ -z ${github_org_wide+x} ]; then 
     echo "GitHub organization mode variable is unset, assuming only need to edit individual current repo"; 
-    checker_apps[0]=$GITHUB_WORKSPACE
+    checker_apps[0]=$(pwd)
     echo "setting workspace to"
-    echo "$GITHUB_WORKSPACE"
+    pwd
 else 
     echo "GitHub organization mode is being set, attempting to run for a GitHub organization" 
         
