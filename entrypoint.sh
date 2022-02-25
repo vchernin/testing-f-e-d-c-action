@@ -20,6 +20,9 @@ fi
 detect_manifest() {
     repo=${1}
     
+    echo "current repo: "
+    echo "$repo"
+    
     # check if repo opted out
     # todo is this valid arg check?
     
@@ -79,8 +82,10 @@ else
     mapfile -t checker_apps < <( grep -rl -E 'extra-data|x-checker-data|\.AppImage' | cut -d/ -f1 | sort -u )
 fi
 
-for repo in "${checker_apps[@]}"; do
+for repo in ${checker_apps[@]}; do
     manifest=$(detect_manifest "$repo")
+    echo "manifest found is: " 
+    echo "$manifest"
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
         /app/flatpak-external-data-checker --verbose "$require_important_update" "$automerge_fedc_prs" --update --never-fork "$repo"/"$manifest"
