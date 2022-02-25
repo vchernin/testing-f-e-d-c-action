@@ -44,4 +44,4 @@ runs:
     GITHUB_TOKEN: ${{ inputs.github_token_input }}
     # CONFIG_FILE: ${{ inputs.config_file }}
     # GITHUB_ORG_WIDE: ${{ inputs.github_org_wide }}
-    GITHUB_WORKSPACE: ${{ inputs.github_workspace_input }} # todo verify
+    GITHUB_WORKSPACE_OVERRIDE: ${{ inputs.github_workspace_input }} # todo verify

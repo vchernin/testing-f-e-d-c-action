@@ -26,7 +26,7 @@ detect_manifest() {
     # check if repo opted out
     # todo is this valid arg check?
     
-    if [ -z ${config_option+x} ]; then 
+    if [ -z ${config_file+x} ]; then 
         echo "config option is not defined"; 
     else 
         echo "config file should exist, attempting to read it"; 
@@ -69,7 +69,9 @@ git config --global user.email "$GIT_AUTHOR_EMAIL"
 
 if [ -z ${github_org_wide+x} ]; then 
     echo "GitHub organization mode variable is unset, assuming only need to edit individual current repo"; 
-    checker_apps[0]=$GITHUB_WORKSPACE
+    checker_apps[0]=$GITHUB_WORKSPACE_OVERRIDE
+    echo "setting workspace to"
+    echo "$GITHUB_WORKSPACE_OVERRIDE"
 else 
     echo "GitHub organization mode is being set, attempting to run for a GitHub organization" 
         
