@@ -17,6 +17,9 @@ else
     github_org_wide=$2
 fi
 
+echo "github workspace override: "
+echo "$GITHUB_WORKSPACE_OVERRIDE"
+
 detect_manifest() {
     repo=${1}
     
