@@ -100,6 +100,6 @@ for repo in ${checker_apps[@]}; do
     echo "$manifest"
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        /app/flatpak-external-data-checker --verbose "$require_important_update" "$automerge_fedc_prs" --update --never-fork "$manifest"
+        /app/flatpak-external-data-checker --verbose --update --never-fork "$manifest"
     fi
 done
