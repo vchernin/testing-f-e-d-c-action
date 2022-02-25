@@ -17,13 +17,28 @@ else
     github_org_wide=$2
 fi
 
-echo "github workspace override: "
-echo "$GITHUB_WORKSPACE_OVERRIDE"
-
-ls
-
 detect_manifest() {
     repo=${1}
+    
+    # Todo whether run GitHub-org wide or for an individual repo, this should search for manifests recursively.
+    # There is no guarantee it is in the root directory.
+    
+    # todo for some reason the dir above is always not the expected name, so hardcoding
+    # the above suggestion should still fix this properly though
+    
+    # todo maybe just make the path a required input option...
+    
+    if [[ -f com.github.wwmm.easyeffects.yml ]]; then
+        manifest=com.github.wwmm.easyeffects.yml
+    elif [[ -f com.github.wwmm.easyeffects.yaml ]]; then
+        manifest=com.github.wwmm.easyeffects.yaml
+    elif [[ -f com.github.wwmm.easyeffects.json ]]; then
+        manifest=com.github.wwmm.easyeffects.json
+    else
+        return 1
+    fi
+
+    echo $manifest
     
     # check if repo opted out
     # todo is this valid arg check?
@@ -50,26 +65,6 @@ detect_manifest() {
             echo "config file variable was set, but config file was not found"
         fi
     fi
-    
-    # Todo whether run GitHub-org wide or for an individual repo, this should search for manifests recursively.
-    # There is no guarantee it is in the root directory.
-    
-    # todo for some reason the dir above is always not the expected name, so hardcoding
-    # the above suggestion should still fix this properly though
-    
-    # todo maybe just make the path a required input option...
-    
-    if [[ -f com.github.wwmm.easyeffects.yml ]]; then
-        manifest=com.github.wwmm.easyeffects.yml
-    elif [[ -f com.github.wwmm.easyeffects.yaml ]]; then
-        manifest=com.github.wwmm.easyeffects.yaml
-    elif [[ -f com.github.wwmm.easyeffects.json ]]; then
-        manifest=com.github.wwmm.easyeffects.json
-    else
-        return 1
-    fi
-
-    echo $manifest
 }
 
 git config --global user.name "$GIT_AUTHOR_NAME" && \
