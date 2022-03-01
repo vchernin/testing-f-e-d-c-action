@@ -65,18 +65,17 @@ read_config() {
         ls
         if [[ -f $config_file ]]; then
             echo "passed here"
-            if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
-                return 1
-                # todo these seem to not actually be read here...
-            fi
-            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$config_file" > /dev/null; then
+            if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
                 return 1
             fi
-            if ! jq -e '."require-important-update" | not' < "$config_file" > /dev/null; then
+            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < $config_file > /dev/null; then
+                return 1
+            fi
+            if ! jq -e '."require-important-update" | not' < $config_file > /dev/null; then
                 FEDC_OPTS+=("--require-important-update")
             fi
             # todo this probably won't actually work yet, but is here for later
-            if ! jq -e '."automerge-flathubbot-prs" | not' < "$config_file" > /dev/null; then
+            if ! jq -e '."automerge-flathubbot-prs" | not' < $config_file > /dev/null; then
                 FEDC_OPTS+=("--automerge-flathubbot-prs") 
             fi
         else
