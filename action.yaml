@@ -34,7 +34,7 @@ runs:
   using: "docker"
   image: "Dockerfile"
   # todo this works, but ideally don't build a docker image every time...
-  # can we not push this image somewhere. Or include the package in upstream image and mount the script instead?
+  # can we not push this image somewhere. Or include parallel in upstream image and mount the script instead?
   
   # todo docs seem to specify this, but maybe env can be used instead
   args:
