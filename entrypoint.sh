@@ -56,8 +56,7 @@ detect_manifest() {
 
 read_config() {
     
-    REQUIRE_IMPORTANT_UPDATE_OPTS=("")
-    AUTOMERGE_OPTS=("")
+    FEDC_OPTS=()
     
     if [ -z ${config_file+x} ]; then 
         echo "config file variable was not set, no config options will be read from a file"
@@ -66,16 +65,17 @@ read_config() {
         if [[ -f $config_file ]]; then
             if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
                 return 1
+                # todo these seem to not actually be read here...
             fi
             if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < "$config_file" > /dev/null; then
                 return 1
             fi
             if ! jq -e '."require-important-update" | not' < "$config_file" > /dev/null; then
-                REQUIRE_IMPORTANT_UPDATE_OPTS=("--require-important-update")
+                FEDC_OPTS+=("--require-important-update")
             fi
             # todo this probably won't actually work yet, but is here for later
             if ! jq -e '."automerge-flathubbot-prs" | not' < "$config_file" > /dev/null; then
-                AUTOMERGE_OPTS=("--automerge-flathubbot-prs") 
+                FEDC_OPTS+=("--automerge-flathubbot-prs") 
             fi
         else
             echo "config file variable was set, but config file was not found"
@@ -109,6 +109,6 @@ for repo in ${checker_apps[@]}; do
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
         echo "$require_important_update"
-        /app/flatpak-external-data-checker --verbose "${REQUIRE_IMPORTANT_UPDATE_OPTS[@]}" "${AUTOMERGE_OPTS[@]}" --update --never-fork "$manifest"
+        /app/flatpak-external-data-checker --verbose "${FEDC_OPTS[@]}" --update --never-fork "$manifest"
     fi
 done
