@@ -62,7 +62,9 @@ read_config() {
         echo "config file variable was not set, no config options will be read from a file"
     else 
         echo "config file should exist, attempting to read it"; 
+        ls
         if [[ -f $config_file ]]; then
+            echo "passed here"
             if ! jq -e '."disable-external-data-checker" | not' < "$config_file" > /dev/null; then
                 return 1
                 # todo these seem to not actually be read here...
