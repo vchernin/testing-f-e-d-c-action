@@ -60,7 +60,7 @@ read_config() {
         ls
         if [[ -f $config_file ]]; then
         
-            # todo these 2 checks are only for org mode, and uneeded for individual mode
+            # todo these 2 checks are only for org mode, and uneeded for individual mode (probably?)
             # if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
             #     return 1
             # fi
