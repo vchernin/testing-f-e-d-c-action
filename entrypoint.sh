@@ -33,8 +33,8 @@ detect_manifest() {
     # todo maybe just make the path a required input option...
     # but need to be consistent for org-wide mode
     
-    # todo for some reason the dir above is always not the expected name, so hardcoding
-    # the above suggestion should still fix this properly though
+    # when in not-flathub we cannot rely on the above directory being the same name as the manifest
+    # so hardcoding may be the way to go suggestion should still fix this properly though
     
     # if [[ -f com.github.wwmm.easyeffects.yml ]]; then
     #     manifest=com.github.wwmm.easyeffects.yml
