@@ -33,6 +33,9 @@ inputs:
 runs:
   using: "docker"
   image: "Dockerfile"
+  # todo this works, but ideally don't build a docker image every time...
+  # can we not push this image somewhere.
+  
   # todo docs seem to specify this, but maybe env can be used instead
   args:
     - ${{ inputs.config_file }}
@@ -48,4 +51,4 @@ runs:
     GITHUB_TOKEN: ${{ inputs.github_token_input }}
     # CONFIG_FILE: ${{ inputs.config_file }}
     # GITHUB_ORG_WIDE: ${{ inputs.github_org_wide }}
-    GITHUB_WORKSPACE_OVERRIDE: ${{ inputs.github_workspace_input }} # todo verify
+    GITHUB_WORKSPACE_OVERRIDE: ${{ inputs.github_workspace_input }} # todo this isn't actually used (and it never really worked anyhow, so should remove)

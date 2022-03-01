@@ -56,8 +56,9 @@ detect_manifest() {
 
 read_config() {
     
-    require_important_update=""
-    automerge_flathubbot_prs=""
+    REQUIRE_IMPORTANT_UPDATE_OPTS=("")
+    AUTOMERGE_OPTS=("")
+    
     if [ -z ${config_file+x} ]; then 
         echo "config file variable was not set, no config options will be read from a file"
     else 
@@ -70,11 +71,11 @@ read_config() {
                 return 1
             fi
             if ! jq -e '."require-important-update" | not' < "$config_file" > /dev/null; then
-                require_important_update="--require-important-update"
+                REQUIRE_IMPORTANT_UPDATE_OPTS=("--require-important-update")
             fi
             # todo this probably won't actually work yet, but is here for later
             if ! jq -e '."automerge-flathubbot-prs" | not' < "$config_file" > /dev/null; then
-                automerge_flathubbot_prs="--automerge-flathubbot-prs"
+                AUTOMERGE_OPTS=("--automerge-flathubbot-prs") 
             fi
         else
             echo "config file variable was set, but config file was not found"
@@ -107,6 +108,7 @@ for repo in ${checker_apps[@]}; do
     read_config
     if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        /app/flatpak-external-data-checker --verbose --require-important-update --update --never-fork "$manifest"
+        echo "$require_important_update"
+        /app/flatpak-external-data-checker --verbose "${REQUIRE_IMPORTANT_UPDATE_OPTS[@]}" "${AUTOMERGE_OPTS[@]}" --update --never-fork "$manifest"
     fi
 done
