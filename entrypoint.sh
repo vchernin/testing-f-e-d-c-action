@@ -64,10 +64,7 @@ read_config() {
         echo "config file should exist, attempting to read it"; 
         ls
         if [[ -f $config_file ]]; then
-            # todo these config options are never actually found, even if they exist
-            echo "passed here"
             if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
-                echo "wtf"
                 return 1
             fi
             if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < $config_file > /dev/null; then
@@ -108,8 +105,8 @@ fi
 
 for repo in ${checker_apps[@]}; do
     manifest=$(detect_manifest "$repo")
-    read_config
-    if [[ -n $manifest ]]; then
+    config=read_config
+    if [[ -n $manifest && -n $config ]]; then
         echo "==> checking ${repo}"
         echo "$require_important_update"
         /app/flatpak-external-data-checker --verbose "${FEDC_OPTS[@]}" --update --never-fork "$manifest"
