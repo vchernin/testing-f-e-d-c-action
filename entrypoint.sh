@@ -65,6 +65,8 @@ read_config() {
         ls
         if [[ -f $config_file ]]; then
             echo "passed here"
+            cat $config_file
+            cat "flathub.json"
             if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
                 return 1
             fi
