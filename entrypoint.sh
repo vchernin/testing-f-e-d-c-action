@@ -92,6 +92,7 @@ if [ -z ${github_org_wide+x} ]; then
     echo "GitHub organization mode variable is unset, assuming only need to edit individual current repo"; 
     checker_apps[0]=$(pwd)
 else 
+    # todo all the github-org wide code is basically untested
     echo "GitHub organization mode is being set, attempting to run for a GitHub organization" 
         
     # assumes the GitHub org follows the Flathub org's structute.
@@ -105,7 +106,7 @@ fi
 
 for repo in ${checker_apps[@]}; do
     manifest=$(detect_manifest "$repo")
-    config=read_config
+    config=$(read_config)
     if [[ -n $manifest && -n $config ]]; then
         echo "==> checking ${repo}"
         echo "$require_important_update"
