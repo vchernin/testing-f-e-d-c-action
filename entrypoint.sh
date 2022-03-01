@@ -27,14 +27,14 @@ fi
 detect_manifest() {
     repo=${1}
     
-    # Todo whether run GitHub-org wide or for an individual repo, this should search for manifests recursively.
+    # Todo whether run GitHub-org wide or for an individual repo, this should ideally search for manifests recursively.
     # There is no guarantee it is in the root directory.
+    
+    # todo maybe just make the path a required input option...
+    # but need to be consistent for org-wide mode
     
     # todo for some reason the dir above is always not the expected name, so hardcoding
     # the above suggestion should still fix this properly though
-    
-    # todo maybe just make the path a required input option...
-    # but need to be clever for org-wide mode
     
     # if [[ -f com.github.wwmm.easyeffects.yml ]]; then
     #     manifest=com.github.wwmm.easyeffects.yml
@@ -64,12 +64,14 @@ read_config() {
         echo "config file should exist, attempting to read it"; 
         ls
         if [[ -f $config_file ]]; then
-            if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
-                return 1
-            fi
-            if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < $config_file > /dev/null; then
-                return 1
-            fi
+        
+            # todo these 2 checks are only for org mode, and undeeded for individual mode
+            # if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
+            #     return 1
+            # fi
+            # if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < $config_file > /dev/null; then
+            #     return 1
+            # fi
             if ! jq -e '."require-important-update" | not' < $config_file > /dev/null; then
                 FEDC_OPTS+=("--require-important-update")
             fi
@@ -106,10 +108,9 @@ fi
 
 for repo in ${checker_apps[@]}; do
     manifest=$(detect_manifest "$repo")
-    config=$(read_config)
-    if [[ -n $manifest && -n $config ]]; then
+    read_config
+    if [[ -n $manifest ]]; then
         echo "==> checking ${repo}"
-        echo "$require_important_update"
         /app/flatpak-external-data-checker --verbose "${FEDC_OPTS[@]}" --update --never-fork "$manifest"
     fi
 done
