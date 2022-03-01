@@ -64,10 +64,10 @@ read_config() {
         echo "config file should exist, attempting to read it"; 
         ls
         if [[ -f $config_file ]]; then
+            # todo these config options are never actually found, even if they exist
             echo "passed here"
-            cat $config_file
-            cat "flathub.json"
             if ! jq -e '."disable-external-data-checker" | not' < $config_file > /dev/null; then
+                echo "wtf"
                 return 1
             fi
             if ! jq -e '."end-of-life" or ."end-of-life-rebase" | not' < $config_file > /dev/null; then
