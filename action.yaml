@@ -3,6 +3,8 @@ author: "The Flatpak External Data Checker authors"
 description: "A tool for checking if the external data used in Flatpak manifests is still up to date" 
 inputs:
   # todo these are untrusted inputs, so ensure we handle safely
+  # even though this action might only run in an individual repo, it still has some amount of access (at least by default)
+  # so at bare minimum this should do some sanity checks on the inputs somehow
   config_file:
     description: "Set the name for a JSON config file that can store configuration options passed to the action. Note the file name is always appended with .json"
     required: false
@@ -49,3 +51,6 @@ runs:
     GIT_COMMITTER_EMAIL: ${{ inputs.email_input }}@users.noreply.github.com
     EMAIL: ${{ inputs.email_input }}@users.noreply.github.com
     GITHUB_TOKEN: ${{ inputs.github_token_input }}
+    
+    # todo, I believe there is a way of restricting an action's permissions, if possible that would make a lot of sense.
+    
